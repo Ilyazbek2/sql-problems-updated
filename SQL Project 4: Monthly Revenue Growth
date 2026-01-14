@@ -1,0 +1,16 @@
+WITH monthly_revenue AS (
+    SELECT 
+        DATE_TRUNC('month', order_date) AS month,
+        SUM(total_amount) AS revenue
+    FROM Orders
+    GROUP BY DATE_TRUNC('month', order_date)
+)
+SELECT 
+    month,
+    revenue,
+    ROUND(
+        (revenue - LAG(revenue) OVER (ORDER BY month)) 
+        / LAG(revenue) OVER (ORDER BY month) * 100, 
+        2
+    ) AS growth_percent
+FROM monthly_revenue;

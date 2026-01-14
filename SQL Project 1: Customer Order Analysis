@@ -1,0 +1,10 @@
+SELECT 
+    c.customer_id,
+    c.name,
+    COUNT(o.order_id) AS total_orders,
+    AVG(o.total_amount) AS avg_order_value
+FROM Customers c
+JOIN Orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.name
+HAVING COUNT(o.order_id) > 3
+   AND AVG(o.total_amount) > 100;

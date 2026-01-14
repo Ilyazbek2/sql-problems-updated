@@ -1,0 +1,9 @@
+SELECT 
+    e.employee_id,
+    e.name,
+    d.department_name,
+    e.salary,
+    e.salary - AVG(e.salary) OVER (PARTITION BY e.department_id) 
+        AS salary_difference
+FROM Employees e
+JOIN Departments d ON e.department_id = d.department_id;

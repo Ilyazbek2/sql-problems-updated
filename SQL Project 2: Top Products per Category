@@ -1,0 +1,18 @@
+WITH product_sales AS (
+    SELECT 
+        p.product_id,
+        p.product_name,
+        c.category_name,
+        SUM(oi.quantity) AS total_sold,
+        RANK() OVER (
+            PARTITION BY c.category_id 
+            ORDER BY SUM(oi.quantity) DESC
+        ) AS rnk
+    FROM Products p
+    JOIN OrderItems oi ON p.product_id = oi.product_id
+    JOIN Categories c ON p.category_id = c.category_id
+    GROUP BY p.product_id, p.product_name, c.category_id, c.category_name
+)
+SELECT product_id, product_name, category_name, total_sold
+FROM product_sales
+WHERE rnk = 1;
